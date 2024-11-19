@@ -6,7 +6,7 @@ include './connect.php';
  */
 $res = [];
 
-$q = $_POST['q'];
+$q = $_GET['q'];
 
 function getUserData(string $token): array
 {
@@ -88,6 +88,7 @@ function login(string $name, string $pass): array
  */
 function registration(string $name, string $pass): void
 {
+    global $res;
     global $pdo;
     $UserExist = getUserExistsFromName($name);
 
@@ -99,7 +100,6 @@ function registration(string $name, string $pass): void
     }
 
     $sql = 'INSERT INTO `users` (`username`, `password`) VALUES (:username, :pass)';
-
     $sth = $pdo->prepare($sql);
     $sth->execute(array('username' => $name, 'pass' => md5(md5($pass))));
 
@@ -124,28 +124,26 @@ function getUserExistsFromName(string $name)
 
 if ($q == 'getUserData') {
 
-    $token = $_POST['userToken'];
+    $token = $_GET['userToken'];
     $res = getUserData($token);
 } elseif ($q == 'login') {
 
-    $username = $_POST['username'];
-    $pass = $_POST['password'];
+    
+    $username = $_GET['username'];
+    $pass = $_GET['password'];
 
     $res = login($username, $pass);
 
 } elseif ($q == 'registration') {
 
-    $username = $_POST['username'];
-    $pass = $_POST['password'];
-
-
+    $username = $_GET['username'];
+    $pass = $_GET['password'];
+    
     registration($username, $pass);
 
     //Автоматически войти в профиль после регистрации
     $res = login($username, $pass);
 
 }
-
-
 echo json_encode($res, JSON_UNESCAPED_UNICODE);
 

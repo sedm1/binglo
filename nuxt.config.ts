@@ -6,10 +6,10 @@ export default defineNuxtConfig({
     families: {
       'Poppins': true
     }
-  }]],
+  }], 'pinia-plugin-persistedstate/nuxt'],
   runtimeConfig: {
     public: {
-      BD: 'http://binglo/src/server/api/'
+      BD: 'http://binglo/server/api/'
     }
   },
   vite: {

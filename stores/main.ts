@@ -19,41 +19,11 @@ export const useMainStore = defineStore('mainStore', {
             this.user.token = User?.token ? User.token : ''
         },
         
-        async getUserInfo(): Promise<void> {
-            const config = useRuntimeConfig()
-
-            let params = new URLSearchParams();
-            params.append('userToken', this.user.token);
-            params.append('q', 'getUserData');
-            if (this.user.token) {
-                
-                try {
-                    await useFetch(config.public.BD + 'user.php')
-                        .then((res) => {
-                            console.log(res)
-                            // const result = res.data as unknown as DataFromDb
-
-                            // if (!result.status) {
-                            //     console.log('Такого пользователя не существует')
-                            //     this.setUserInfo()
-
-                            //     return
-                            // }
-                            // this.setUserInfo(result.result[0])
-
-                        })
-                        .catch((err) => {
-                            console.log('Ошибка при получениии пользователя с БД: ' + err)
-                        })
-
-
-                } catch {
-                    console.log('Ошибка при получениии пользователя с БД')
-                }
-            } else {
-                this.user.username = 'User'
-                this.user.avatar = 'avatar.jpg'
-            }
+        getUserInfo(): void {
+            if(this.user.token) return;
+            
+            this.user.username = 'User'
+            this.user.avatar = 'avatar.jpg'
 
         },
 
@@ -71,9 +41,17 @@ export const useMainStore = defineStore('mainStore', {
             params.append('q', 'login');
 
             try {
-                await useFetch(config.public.BD + + 'user.php')
+                await useFetch(config.public.BD + 'user.php', {
+                    method: 'GET',
+                    query: {
+                        username: username,
+                        password: password,
+                        q: 'login'
+                    }
+                })
                     .then((res) => {
-                        const result = res.data as unknown as DataFromDb
+                        console.log(res)
+                        const result = res.data.value as unknown as DataFromDb
 
                         if (!result.status) {
                             console.log(result.message)
@@ -100,15 +78,17 @@ export const useMainStore = defineStore('mainStore', {
         async registration(username: string, password: string) {
             const config = useRuntimeConfig()
 
-            let params = new URLSearchParams();
-            params.append('username', username);
-            params.append('password', password);
-            params.append('q', 'registration');
-
             try {
-                await useFetch(config + 'user.php')
+                await useFetch(config.public.BD + 'user.php', {
+                    method: 'GET',
+                    query: {
+                        username: username,
+                        password: password,
+                        q: 'registration'
+                    }
+                })
                     .then((res) => {
-                        const result = res.data as unknown as DataFromDb
+                        const result = res.data.value as unknown as DataFromDb
 
                         if (!result.status) {
                             console.log(result.message)
@@ -126,5 +106,8 @@ export const useMainStore = defineStore('mainStore', {
                 return
             }
         },
+    },
+    persist: {
+        storage: piniaPluginPersistedstate.localStorage()
     }
 })

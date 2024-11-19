@@ -2,7 +2,7 @@
     <main>
         <section class="main">
             <div class="container">
-                <h1 class="main_title">Создавайте и следите за ходом <br/>разработки своих проектов</h1>
+                <h1 class="main_title">Создавайте, и следите за ходом <br/>разработки своих проектов</h1>
                 <NuxtLink to="/boards" class="main_button">Перейти к доскам <img src="/icons/arrow-right.svg" alt="ArrowRight"></NuxtLink>
             </div>
         </section>
