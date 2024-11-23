@@ -35,11 +35,6 @@ export const useMainStore = defineStore('mainStore', {
         async login(username: string, password: string) {
             const config = useRuntimeConfig()
 
-            let params = new URLSearchParams();
-            params.append('username', username);
-            params.append('password', password);
-            params.append('q', 'login');
-
             try {
                 await useFetch(config.public.BD + 'user.php', {
                     method: 'GET',

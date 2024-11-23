@@ -21,4 +21,7 @@ export default defineNuxtConfig({
         },
     },
   },
+  routeRules: {
+    '/boards': { ssr: false },
+  }
 })
